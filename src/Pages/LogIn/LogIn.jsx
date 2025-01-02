@@ -15,8 +15,8 @@ const LogIn = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const from = location.state?.from?.pathname || "/";
-
+    const from = location.state?.from?.pathname || "/order/salad";
+    console.log('state in the location login page', location.state)
     useEffect(() => {
         loadCaptchaEnginge(6);
     }, [])
