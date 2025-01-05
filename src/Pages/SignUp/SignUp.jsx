@@ -4,8 +4,12 @@ import { useForm } from 'react-hook-form';
 import { authContext } from '../../providers/AuthProvider';
 import { data, Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import SocialLogin from '../../components/SocialLogin/SocialLogin';
 
 const SignUp = () => {
+
+    const axiosPublic = useAxiosPublic();
 
     const {
         register,
@@ -23,19 +27,29 @@ const SignUp = () => {
                 const loggedUser = result.user;
                 console.log(loggedUser)
                 manageProfile(data.name, data.photoURL)
-                .then(() => {
-                    console.log("user profile info updated");
-                    reset();
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "user Created Successfully.",
-                        showConfirmButton: false,
-                        timer: 1500
-                      });
-                      navigate('/');
-                })
-                .catch(error => console.log(error))
+                    .then(() => {
+                        // create user entry in the database
+                        const userInfo = {
+                            name: data.name,
+                            email: data.email
+                        }
+                        axiosPublic.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    console.log("user added to the database");
+                                    reset();
+                                    Swal.fire({
+                                        position: "top-end",
+                                        icon: "success",
+                                        title: "user Created Successfully.",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    navigate('/');
+                                }
+                            })
+                    })
+                    .catch(error => console.log(error))
             })
     };
 
@@ -66,7 +80,7 @@ const SignUp = () => {
                                 <label className="label">
                                     <span className="label-text">Photo URL</span>
                                 </label>
-                                <input type="text" {...register("photoURL", { required: true })}  placeholder="Photo URL" className="input input-bordered" />
+                                <input type="text" {...register("photoURL", { required: true })} placeholder="Photo URL" className="input input-bordered" />
                                 {errors.photoURL && <span className='text-red-600'>Photo URL is required</span>}
                             </div>
                             <div className="form-control">
@@ -102,7 +116,8 @@ const SignUp = () => {
                                 {/* <button >Sign Up</button> */}
                             </div>
                         </form>
-                        <p className='mb-5 text-center'><small>Already have an account? Please <Link to="/login">LogIn</Link></small></p>
+                        <p className='mb-5 px-6 text-center'><small>Already have an account? Please <Link to="/login">LogIn</Link></small></p>
+                        <SocialLogin/>
                     </div>
                 </div>
             </div>

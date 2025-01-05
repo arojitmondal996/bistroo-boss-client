@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { authContext } from '../../providers/AuthProvider';
 import { Helmet } from 'react-helmet-async';
 import Swal from 'sweetalert2';
+import SocialLogin from '../../components/SocialLogin/SocialLogin';
 
 const LogIn = () => {
 
@@ -35,21 +36,21 @@ const LogIn = () => {
                 Swal.fire({
                     title: "User logIn Successfully.",
                     showClass: {
-                      popup: `
+                        popup: `
                         animate__animated
                         animate__fadeInUp
                         animate__faster
                       `
                     },
                     hideClass: {
-                      popup: `
+                        popup: `
                         animate__animated
                         animate__fadeOutDown
                         animate__faster
                       `
                     }
-                  });
-                  navigate(from, {replace: true});
+                });
+                navigate(from, { replace: true });
             })
     }
 
@@ -111,7 +112,8 @@ const LogIn = () => {
                                 <input disabled={disabled} className="btn btn-primary" type="submit" value="login" />
                             </div>
                         </form>
-                        <p className='text-center'><small>New Here? <Link to='/signup'>Create an new account</Link></small></p>
+                        <p className='text-center px-6'><small>New Here? <Link to='/signup'>Create an new account</Link></small></p>
+                        <SocialLogin />
                     </div>
                 </div>
             </div>
